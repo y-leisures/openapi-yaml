@@ -1,0 +1,437 @@
+---
+openapi: 3.0.3
+info:
+  title: Baseball Management System
+  version: 1.0.0
+servers:
+- url: http://localhost:8080
+  description: Local server
+- url: http://192.168.0.119:8080
+  description: A remote server
+tags:
+- name: BMS basic API
+  description: BMS Common APIs for authenticated users
+- name: BMS guest API
+  description: API endpoints for guest users
+- name: Mock BMS basic API
+  description: Mock BMS Common APIs for authenticated users
+paths:
+  /api/v1/core/players:
+    get:
+      tags:
+      - BMS basic API
+      parameters:
+      - name: limit
+        in: query
+        schema:
+          default: 50
+          type: number
+      - name: offset
+        in: query
+        schema:
+          type: number
+      - name: team_ids
+        in: query
+        description: filter with team ids
+        schema:
+          type: array
+          items:
+            format: int32
+            type: integer
+        style: form
+        explode: false
+      responses:
+        "200":
+          description: OK
+    post:
+      tags:
+      - BMS basic API
+      responses:
+        "200":
+          description: OK
+  /api/v1/core/players/{id}:
+    get:
+      tags:
+      - BMS basic API
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          format: int32
+          type: integer
+      responses:
+        "200":
+          description: OK
+    put:
+      tags:
+      - BMS basic API
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+    delete:
+      tags:
+      - BMS basic API
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+  /api/v1/core/teams:
+    get:
+      tags:
+      - BMS basic API
+      responses:
+        "200":
+          description: A list of teams
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/TeamResponse"
+        "500":
+          description: Internal server error
+    post:
+      tags:
+      - BMS basic API
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/TeamRequest"
+      responses:
+        "200":
+          description: OK
+  /api/v1/core/teams/{id}:
+    get:
+      tags:
+      - BMS basic API
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          format: int32
+          type: integer
+      responses:
+        "200":
+          description: The detail of a team
+          content:
+            application/json:
+              schema:
+                description: The response of a team
+                required:
+                - id
+                - name
+                - regulationAtBats
+                type: object
+                properties:
+                  id:
+                    format: int32
+                    type: integer
+                  name:
+                    type: string
+                  url_path:
+                    maxLength: 32
+                    type: string
+                  regulationAtBats:
+                    format: float
+                    type: number
+                    example: 1.5
+                  createdAt:
+                    $ref: "#/components/schemas/LocalDateTime"
+                  updatedAt:
+                    $ref: "#/components/schemas/LocalDateTime"
+                  deletedAt:
+                    $ref: "#/components/schemas/LocalDateTime"
+        "500":
+          description: Internal server error
+    put:
+      tags:
+      - BMS basic API
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/TeamRequest"
+      responses:
+        "200":
+          description: The result of updating a team
+        "404":
+          description: The team does not exist
+        "500":
+          description: Internal server error
+    delete:
+      tags:
+      - BMS basic API
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: The result of deleting a team
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+        "404":
+          description: The team does not exist
+        "500":
+          description: Internal server error
+  /dummy/api/v1/core/players:
+    get:
+      tags:
+      - Mock BMS basic API
+      parameters:
+      - name: limit
+        in: query
+        schema:
+          default: 50
+          type: number
+      - name: offset
+        in: query
+        schema:
+          type: number
+      - name: team_ids
+        in: query
+        description: filter with team ids
+        schema:
+          type: array
+          items:
+            format: int32
+            type: integer
+        style: form
+        explode: false
+      responses:
+        "200":
+          description: OK
+    post:
+      tags:
+      - Mock BMS basic API
+      responses:
+        "200":
+          description: OK
+  /dummy/api/v1/core/players/{id}:
+    get:
+      tags:
+      - Mock BMS basic API
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          format: int32
+          type: integer
+      responses:
+        "200":
+          description: OK
+    put:
+      tags:
+      - Mock BMS basic API
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+    delete:
+      tags:
+      - Mock BMS basic API
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+  /dummy/api/v1/core/teams:
+    get:
+      tags:
+      - Mock BMS basic API
+      responses:
+        "200":
+          description: A list of teams
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/TeamResponse"
+        "500":
+          description: Internal server error
+    post:
+      tags:
+      - Mock BMS basic API
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/TeamRequest"
+      responses:
+        "200":
+          description: OK
+  /dummy/api/v1/core/teams/{id}:
+    get:
+      tags:
+      - Mock BMS basic API
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          format: int32
+          type: integer
+      responses:
+        "200":
+          description: The detail of a team
+          content:
+            application/json:
+              schema:
+                description: The response of a team
+                required:
+                - id
+                - name
+                - regulationAtBats
+                type: object
+                properties:
+                  id:
+                    format: int32
+                    type: integer
+                  name:
+                    type: string
+                  url_path:
+                    maxLength: 32
+                    type: string
+                  regulationAtBats:
+                    format: float
+                    type: number
+                    example: 1.5
+                  createdAt:
+                    $ref: "#/components/schemas/LocalDateTime"
+                  updatedAt:
+                    $ref: "#/components/schemas/LocalDateTime"
+                  deletedAt:
+                    $ref: "#/components/schemas/LocalDateTime"
+        "500":
+          description: Internal server error
+    put:
+      tags:
+      - Mock BMS basic API
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/TeamRequest"
+      responses:
+        "200":
+          description: The result of updating a team
+        "404":
+          description: The team does not exist
+        "500":
+          description: Internal server error
+    delete:
+      tags:
+      - Mock BMS basic API
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: The result of deleting a team
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+        "404":
+          description: The team does not exist
+        "500":
+          description: Internal server error
+components:
+  schemas:
+    LocalDateTime:
+      format: date-time
+      type: string
+      example: 2022-03-10T12:15:50
+    TeamRequest:
+      type: object
+      properties:
+        id:
+          format: int32
+          type: integer
+        name:
+          type: string
+        url_path:
+          maxLength: 32
+          minLength: 4
+          type: string
+        regulationAtBats:
+          format: double
+          maximum: 5
+          minimum: 0
+          type: number
+    TeamResponse:
+      description: The response of a team
+      required:
+      - id
+      - name
+      - regulationAtBats
+      type: object
+      properties:
+        id:
+          format: int32
+          type: integer
+        name:
+          type: string
+        url_path:
+          maxLength: 32
+          type: string
+        regulationAtBats:
+          format: float
+          type: number
+          example: 1.5
+        createdAt:
+          $ref: "#/components/schemas/LocalDateTime"
+        updatedAt:
+          $ref: "#/components/schemas/LocalDateTime"
+        deletedAt:
+          $ref: "#/components/schemas/LocalDateTime"
