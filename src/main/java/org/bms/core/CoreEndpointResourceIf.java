@@ -5,6 +5,7 @@ import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import org.bms.model.CommandSuccessResult;
+import org.bms.model.PlayerResponse;
 import org.bms.model.TeamRequest;
 import org.bms.model.TeamResponse;
 import org.eclipse.microprofile.openapi.annotations.enums.Explode;
@@ -19,6 +20,9 @@ import org.eclipse.microprofile.openapi.annotations.responses.APIResponses;
 import org.jboss.resteasy.reactive.Separator;
 
 import java.util.Set;
+
+import static org.bms.BmsConstants.EXAMPLE_TEAMS_RESPONSE;
+import static org.bms.BmsConstants.EXAMPLE_TEAM_ID_RESPONSE;
 
 // import static jdk.internal.org.jline.reader.impl.LineReaderImpl.CompletionType.List;
 @Produces(MediaType.APPLICATION_JSON)
@@ -73,7 +77,11 @@ public interface CoreEndpointResourceIf {
     @APIResponses({
             @APIResponse(
                     responseCode = "200", description = "A list of teams",
-                    content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(type = SchemaType.ARRAY, implementation = TeamResponse.class))
+                    content = @Content(
+                            mediaType = MediaType.APPLICATION_JSON,
+                            schema = @Schema(type = SchemaType.ARRAY, implementation = TeamResponse.class),
+                            example = EXAMPLE_TEAMS_RESPONSE
+                    )
             ),
             @APIResponse(responseCode = "500", description = "Internal server error")
     })
@@ -84,11 +92,31 @@ public interface CoreEndpointResourceIf {
     @APIResponses({
             @APIResponse(
                     responseCode = "200", description = "The detail of a team",
-                    content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(type = SchemaType.OBJECT, implementation = TeamResponse.class))
+                    content = @Content(
+                            mediaType = MediaType.APPLICATION_JSON,
+                            schema = @Schema(type = SchemaType.OBJECT, implementation = TeamResponse.class),
+                            example = EXAMPLE_TEAM_ID_RESPONSE
+                    )
             ),
             @APIResponse(responseCode = "500", description = "Internal server error")
     })
     Response getTeamById(@PathParam("id") Integer teamId);
+
+    @GET
+    @Path("/teams/{id}/players")
+    @APIResponses({
+            @APIResponse(
+                    responseCode = "200", description = "The detail of a team",
+                    content = @Content(
+                            mediaType = MediaType.APPLICATION_JSON,
+                            schema = @Schema(type = SchemaType.ARRAY, implementation = PlayerResponse.class)
+                    )
+            ),
+            @APIResponse(responseCode = "500", description = "Internal server error")
+    })
+    default Response getPlayersByTeamId(@PathParam("id") Integer teamId){
+        return null;
+    };
 
     @POST
     @Path("/teams")

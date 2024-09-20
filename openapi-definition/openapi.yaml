@@ -100,6 +100,31 @@ paths:
                 type: array
                 items:
                   $ref: "#/components/schemas/TeamResponse"
+              example:
+              - id: 7935
+                name: OLYBTSMAJN
+                regulationAtBats: 3314.7160749257064
+                createdAt: 2021-02-16T20:17:23.077965358
+                updatedAt: 2023-02-16T20:17:23.077965358
+                url_path: xdlpa
+              - id: 7550
+                name: MHTPJMX
+                regulationAtBats: 9285.838092713186
+                createdAt: 2020-02-25T22:05:54.233017228
+                updatedAt: 2022-02-24T22:05:54.233017228
+                url_path: oalzynjxvmosca
+              - id: 1781
+                name: HYZCGXM
+                regulationAtBats: 8751.063662102344
+                createdAt: 2017-09-14T04:09:42.712983081
+                updatedAt: 2019-09-14T04:09:42.712983081
+                url_path: viql
+              - id: 813
+                name: MROXVVJIS
+                regulationAtBats: 2237.6594648617574
+                createdAt: 2015-08-22T01:26:03.278734206
+                updatedAt: 2017-08-21T01:26:03.278734206
+                url_path: ulohy
         "500":
           description: Internal server error
     post:
@@ -155,6 +180,13 @@ paths:
                     $ref: "#/components/schemas/LocalDateTime"
                   deletedAt:
                     $ref: "#/components/schemas/LocalDateTime"
+              example:
+                id: 123
+                name: CJRDHNYW
+                regulationAtBats: 9466.13924949258
+                createdAt: 2020-12-11T11:14:01.474910848
+                updatedAt: 2021-12-31T11:14:01.474910848
+                url_path: gvoel
         "500":
           description: Internal server error
     put:
@@ -199,6 +231,28 @@ paths:
                     type: string
         "404":
           description: The team does not exist
+        "500":
+          description: Internal server error
+  /api/v1/core/teams/{id}/players:
+    get:
+      tags:
+      - BMS basic API
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          format: int32
+          type: integer
+      responses:
+        "200":
+          description: The detail of a team
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/PlayerResponse"
         "500":
           description: Internal server error
   /dummy/api/v1/core/players:
@@ -285,6 +339,31 @@ paths:
                 type: array
                 items:
                   $ref: "#/components/schemas/TeamResponse"
+              example:
+              - id: 7935
+                name: OLYBTSMAJN
+                regulationAtBats: 3314.7160749257064
+                createdAt: 2021-02-16T20:17:23.077965358
+                updatedAt: 2023-02-16T20:17:23.077965358
+                url_path: xdlpa
+              - id: 7550
+                name: MHTPJMX
+                regulationAtBats: 9285.838092713186
+                createdAt: 2020-02-25T22:05:54.233017228
+                updatedAt: 2022-02-24T22:05:54.233017228
+                url_path: oalzynjxvmosca
+              - id: 1781
+                name: HYZCGXM
+                regulationAtBats: 8751.063662102344
+                createdAt: 2017-09-14T04:09:42.712983081
+                updatedAt: 2019-09-14T04:09:42.712983081
+                url_path: viql
+              - id: 813
+                name: MROXVVJIS
+                regulationAtBats: 2237.6594648617574
+                createdAt: 2015-08-22T01:26:03.278734206
+                updatedAt: 2017-08-21T01:26:03.278734206
+                url_path: ulohy
         "500":
           description: Internal server error
     post:
@@ -340,6 +419,13 @@ paths:
                     $ref: "#/components/schemas/LocalDateTime"
                   deletedAt:
                     $ref: "#/components/schemas/LocalDateTime"
+              example:
+                id: 123
+                name: CJRDHNYW
+                regulationAtBats: 9466.13924949258
+                createdAt: 2020-12-11T11:14:01.474910848
+                updatedAt: 2021-12-31T11:14:01.474910848
+                url_path: gvoel
         "500":
           description: Internal server error
     put:
@@ -386,12 +472,53 @@ paths:
           description: The team does not exist
         "500":
           description: Internal server error
+  /dummy/api/v1/core/teams/{id}/players:
+    get:
+      tags:
+      - Mock BMS basic API
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          format: int32
+          type: integer
+      responses:
+        "200":
+          description: The detail of a team
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/PlayerResponse"
+        "500":
+          description: Internal server error
 components:
   schemas:
     LocalDateTime:
       format: date-time
       type: string
       example: 2022-03-10T12:15:50
+    PlayerResponse:
+      type: object
+      properties:
+        id:
+          format: int32
+          type: integer
+        name:
+          type: string
+        team_id:
+          format: int32
+          type: integer
+        back_number:
+          type: string
+        createdAt:
+          $ref: "#/components/schemas/LocalDateTime"
+        updatedAt:
+          $ref: "#/components/schemas/LocalDateTime"
+        deletedAt:
+          $ref: "#/components/schemas/LocalDateTime"
     TeamRequest:
       type: object
       properties:
