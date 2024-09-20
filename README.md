@@ -37,6 +37,8 @@ Easily start your REST Web Services
 ### OpenAPI
 
 - http://localhost:8080/q/swagger-ui/
+- 3.1.2: [MicroProfile OpenAPI Specification](https://download.eclipse.org/microprofile/microprofile-open-api-3.1.2/microprofile-openapi-spec-3.1.2.html)
+- 4.0: [MicroProfile OpenAPI Specification](https://download.eclipse.org/microprofile/microprofile-open-api-4.0/microprofile-openapi-spec-4.0.html)
 
 ### Development mode
 
@@ -44,6 +46,6 @@ Easily start your REST Web Services
 
 ### Tips
 
-- https://petstore.swagger.io/ is useful to see OpenAPI definitions on your browser.
+- [Swagger UI](https://swagger.io/tools/swagger-ui/)'s https://petstore.swagger.io/ is useful to see OpenAPI definitions on your browser.
   - example 1: https://raw.githubusercontent.com/y-leisures/openapi-yaml/master/openapi-definition/openapi.yaml
   - example 2: https://raw.githubusercontent.com/apache/iceberg/main/open-api/rest-catalog-open-api.yaml
