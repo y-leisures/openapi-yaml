@@ -13,8 +13,9 @@
     </parent>
 
     <properties>
-        <compiler-plugin.version>3.13.0</compiler-plugin.version>
         <maven.compiler.release>17</maven.compiler.release>
+<!--
+        <compiler-plugin.version>3.13.0</compiler-plugin.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <quarkus.platform.artifact-id>quarkus-bom</quarkus.platform.artifact-id>
@@ -22,11 +23,12 @@
         <quarkus.platform.version>3.14.4</quarkus.platform.version>
         <skipITs>true</skipITs>
         <surefire-plugin.version>3.2.5</surefire-plugin.version>
-
+-->
         <!-- custom properties -->
         <instancio.version>5.0.1</instancio.version>
     </properties>
 
+<!--
     <dependencyManagement>
         <dependencies>
             <dependency>
@@ -38,6 +40,7 @@
             </dependency>
         </dependencies>
     </dependencyManagement>
+-->
 
     <dependencies>
         <dependency>
