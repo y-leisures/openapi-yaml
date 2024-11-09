@@ -3,9 +3,11 @@ package org.bms.model;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import jakarta.annotation.Nullable;
+import org.eclipse.microprofile.openapi.annotations.media.Schema;
 
 import java.time.LocalDateTime;
 
+@Schema(name = "PlayerResponse", description = "The response of a player")
 public record PlayerResponse(
         Integer id,
         String name,

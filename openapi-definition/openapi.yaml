@@ -618,11 +618,43 @@ paths:
           description: Internal server error
 components:
   schemas:
+    GameResult:
+      description: The result of a baseball game
+      type: object
+      properties:
+        id:
+          format: int32
+          description: The unique identifier of the game
+          type: integer
+        start_time:
+          $ref: "#/components/schemas/LocalDateTime"
+        end_time:
+          $ref: "#/components/schemas/LocalDateTime"
+        game_status:
+          $ref: "#/components/schemas/GameStatus"
+        stadium_id:
+          format: int32
+          type: integer
+        score:
+          $ref: "#/components/schemas/Score"
+        topTeam:
+          type: string
+        bottomTeam:
+          type: string
+    GameStatus:
+      enum:
+      - PENDING
+      - IN_PROGRESS
+      - FINISHED
+      - POSTPONED
+      - CANCELLED
+      type: string
     LocalDateTime:
       format: date-time
       type: string
       example: 2022-03-10T12:15:50
     PlayerResponse:
+      description: The response of a player
       type: object
       properties:
         id:
@@ -641,6 +673,17 @@ components:
           $ref: "#/components/schemas/LocalDateTime"
         deletedAt:
           $ref: "#/components/schemas/LocalDateTime"
+    Score:
+      type: object
+      properties:
+        topTeamScore:
+          format: int32
+          minimum: 0
+          type: integer
+        bottomTeamScore:
+          format: int32
+          minimum: 0
+          type: integer
     TeamRequest:
       type: object
       properties:
