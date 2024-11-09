@@ -1,6 +1,7 @@
 package org.bms.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import jakarta.annotation.Nullable;
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
 
@@ -20,11 +21,14 @@ public record TeamResponse(
         @Schema(required = true, example = "1.5", format = "float")
         Double regulationAtBats,
 
+        @JsonSerialize(using = LocalDateTimeSerializer.class)
         LocalDateTime createdAt,
+        @JsonSerialize(using = LocalDateTimeSerializer.class)
         LocalDateTime updatedAt,
 
         @JsonProperty(defaultValue = "null")
         @Nullable
+        @JsonSerialize(using = LocalDateTimeSerializer.class)
         LocalDateTime deletedAt
 ) {
 }
