@@ -5,7 +5,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import jakarta.annotation.Nullable;
 import jakarta.validation.constraints.Max;
-import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.Positive;
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
 
 import java.time.LocalDateTime;
@@ -23,20 +23,24 @@ public record TeamResponse(
 
         @Schema(required = true, example = "1.5", format = "float")
         @JsonProperty("regulation_at_bats")
-        @Min(0)
+        @Positive
         @Max(5)
         @JsonSerialize(using = AtBatSerializer.class)
         Double regulationAtBats,
 
         @JsonProperty("created_at")
+        @Schema(format = "date-time")
         @JsonSerialize(using = LocalDateTimeSerializer.class)
         LocalDateTime createdAt,
+
         @JsonProperty("updated_at")
+        @Schema(format = "date-time")
         @JsonSerialize(using = LocalDateTimeSerializer.class)
         LocalDateTime updatedAt,
 
         @JsonProperty("deleted_at")
         @Nullable
+        @Schema(format = "date-time")
         @JsonSerialize(using = LocalDateTimeSerializer.class)
         @JsonInclude(JsonInclude.Include.NON_NULL)
         LocalDateTime deletedAt

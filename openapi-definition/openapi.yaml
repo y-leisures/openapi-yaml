@@ -174,14 +174,21 @@ paths:
                     format: float
                     maximum: 5
                     minimum: 0
+                    exclusiveMinimum: true
                     type: number
                     example: 1.5
                   created_at:
-                    $ref: "#/components/schemas/LocalDateTime"
+                    type: string
+                    allOf:
+                    - $ref: "#/components/schemas/LocalDateTime"
                   updated_at:
-                    $ref: "#/components/schemas/LocalDateTime"
+                    type: string
+                    allOf:
+                    - $ref: "#/components/schemas/LocalDateTime"
                   deleted_at:
-                    $ref: "#/components/schemas/LocalDateTime"
+                    type: string
+                    allOf:
+                    - $ref: "#/components/schemas/LocalDateTime"
               example:
                 id: 123
                 name: CJRDHNYW
@@ -481,14 +488,21 @@ paths:
                     format: float
                     maximum: 5
                     minimum: 0
+                    exclusiveMinimum: true
                     type: number
                     example: 1.5
                   created_at:
-                    $ref: "#/components/schemas/LocalDateTime"
+                    type: string
+                    allOf:
+                    - $ref: "#/components/schemas/LocalDateTime"
                   updated_at:
-                    $ref: "#/components/schemas/LocalDateTime"
+                    type: string
+                    allOf:
+                    - $ref: "#/components/schemas/LocalDateTime"
                   deleted_at:
-                    $ref: "#/components/schemas/LocalDateTime"
+                    type: string
+                    allOf:
+                    - $ref: "#/components/schemas/LocalDateTime"
               example:
                 id: 123
                 name: CJRDHNYW
@@ -626,11 +640,18 @@ components:
           format: float
           maximum: 5
           minimum: 0
+          exclusiveMinimum: true
           type: number
           example: 1.5
         created_at:
-          $ref: "#/components/schemas/LocalDateTime"
+          type: string
+          allOf:
+          - $ref: "#/components/schemas/LocalDateTime"
         updated_at:
-          $ref: "#/components/schemas/LocalDateTime"
+          type: string
+          allOf:
+          - $ref: "#/components/schemas/LocalDateTime"
         deleted_at:
-          $ref: "#/components/schemas/LocalDateTime"
+          type: string
+          allOf:
+          - $ref: "#/components/schemas/LocalDateTime"
