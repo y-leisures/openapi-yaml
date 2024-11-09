@@ -159,7 +159,7 @@ paths:
                 required:
                 - id
                 - name
-                - regulationAtBats
+                - regulation_at_bats
                 type: object
                 properties:
                   id:
@@ -170,15 +170,17 @@ paths:
                   url_path:
                     maxLength: 32
                     type: string
-                  regulationAtBats:
+                  regulation_at_bats:
                     format: float
+                    maximum: 5
+                    minimum: 0
                     type: number
                     example: 1.5
-                  createdAt:
+                  created_at:
                     $ref: "#/components/schemas/LocalDateTime"
-                  updatedAt:
+                  updated_at:
                     $ref: "#/components/schemas/LocalDateTime"
-                  deletedAt:
+                  deleted_at:
                     $ref: "#/components/schemas/LocalDateTime"
               example:
                 id: 123
@@ -464,7 +466,7 @@ paths:
                 required:
                 - id
                 - name
-                - regulationAtBats
+                - regulation_at_bats
                 type: object
                 properties:
                   id:
@@ -475,15 +477,17 @@ paths:
                   url_path:
                     maxLength: 32
                     type: string
-                  regulationAtBats:
+                  regulation_at_bats:
                     format: float
+                    maximum: 5
+                    minimum: 0
                     type: number
                     example: 1.5
-                  createdAt:
+                  created_at:
                     $ref: "#/components/schemas/LocalDateTime"
-                  updatedAt:
+                  updated_at:
                     $ref: "#/components/schemas/LocalDateTime"
-                  deletedAt:
+                  deleted_at:
                     $ref: "#/components/schemas/LocalDateTime"
               example:
                 id: 123
@@ -607,7 +611,7 @@ components:
       required:
       - id
       - name
-      - regulationAtBats
+      - regulation_at_bats
       type: object
       properties:
         id:
@@ -618,13 +622,15 @@ components:
         url_path:
           maxLength: 32
           type: string
-        regulationAtBats:
+        regulation_at_bats:
           format: float
+          maximum: 5
+          minimum: 0
           type: number
           example: 1.5
-        createdAt:
+        created_at:
           $ref: "#/components/schemas/LocalDateTime"
-        updatedAt:
+        updated_at:
           $ref: "#/components/schemas/LocalDateTime"
-        deletedAt:
+        deleted_at:
           $ref: "#/components/schemas/LocalDateTime"

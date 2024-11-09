@@ -13,6 +13,7 @@ import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Locale;
+import java.util.Random;
 import java.util.Set;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
@@ -23,29 +24,39 @@ import static org.instancio.Select.field;
 
 public class MockDataGenerator {
 
-    static List<TeamResponse> generateTeams(Integer sizeOfTeams) {
+    private static Model<TeamResponse> provideTeamModel() {
+        Random random = new Random();
         var predicate = valueOf(field(TeamResponse::createdAt))
                 .to(field(TeamResponse::updatedAt))
-                .as((LocalDateTime c) -> c.plus(Duration.ofDays(730)));
-        List<TeamResponse> teamResponses = Instancio.ofList(TeamResponse.class)
+                .as((LocalDateTime c) -> c.plus(Duration.ofDays(random.nextLong(365))));
+
+        return Instancio.of(TeamResponse.class)
+                .generate(field(TeamResponse::createdAt),
+                        gen -> gen.temporal().localDateTime()
+                                .range(
+                                        LocalDateTime.now().minusYears(5),
+                                        LocalDateTime.now().minusDays(10)))
                 .assign(predicate)
-                .ignore(field(TeamResponse::deletedAt))
-                .generate(field(TeamResponse::createdAt), gen -> gen.temporal().localDateTime().range(LocalDateTime.now().minusYears(10), LocalDateTime.now().minusDays(10)))
+                .generate(field(TeamResponse::deletedAt), gen -> gen.temporal().localDateTime().future()
+                        .range(LocalDateTime.now().plusDays(10), LocalDateTime.now().plusYears(5)).nullable()
+                        .nullable())
                 .generate(field(TeamResponse::urlPath), gen -> gen.string().lowerCase().length(4, 16))
+                .generate(field(TeamResponse::regulationAtBats), gen -> gen.doubles().range(0.0, 5.0))
+                .toModel();
+    }
+
+    static List<TeamResponse> generateTeams(Integer sizeOfTeams) {
+        return Instancio.ofList(provideTeamModel())
+                .size(sizeOfTeams)
+                .generate(field(TeamResponse::id), gen -> gen.ints().range(1, 256))
+                .ignore(field(TeamResponse::deletedAt))
+                .lenient()
                 .create();
-        return teamResponses;
     }
 
     static TeamResponse generateTeam(Integer teamId) {
-        var predicate = valueOf(field(TeamResponse::createdAt))
-                .to(field(TeamResponse::updatedAt))
-                .as((LocalDateTime c) -> c.plus(Duration.ofDays(365)));
-        return Instancio.of(TeamResponse.class)
-                .assign(predicate)
+        return Instancio.of(provideTeamModel())
                 .set(field(TeamResponse::id), teamId)
-                .set(field(TeamResponse::deletedAt), null)
-                .generate(field(TeamResponse::urlPath), gen -> gen.string().lowerCase().length(4, 16))
-                .generate(field(TeamResponse::createdAt), gen -> gen.temporal().localDateTime().range(LocalDateTime.now().minusYears(10), LocalDateTime.now().minusDays(10)))
                 .create();
     }
 
@@ -57,7 +68,9 @@ public class MockDataGenerator {
         return Instancio.of(PlayerResponse.class)
                 // .ignore(field(PlayerResponse::id))
                 .set(field(PlayerResponse::teamId), teamId)
-                .generate(field(PlayerResponse::createdAt), gen -> gen.temporal().localDateTime().past())
+                .generate(field(PlayerResponse::createdAt), gen -> gen.temporal().localDateTime().past()
+                        .range(LocalDateTime.now().minusYears(2), LocalDateTime.now().minusDays(30))
+                )
                 .generate(field(PlayerResponse::backNumber), gen -> gen.string().numericSequence())
                 .toModel();
     }
@@ -123,11 +136,15 @@ public class MockDataGenerator {
                 .supply(field(StadiumResponse::mapUrl), generateMapUrl)
                 .supply(field(StadiumResponse::homepageUrl), generateHomepageUrl)
                 .supply(field(StadiumResponse::name), generateStadiumName::get)
-                .generate(field(StadiumResponse::createdAt), gen -> gen.temporal().localDateTime().past())
+                .generate(field(StadiumResponse::createdAt), gen -> gen.temporal().localDateTime().past()
+                        .range(LocalDateTime.now().minusYears(3), LocalDateTime.now().minusDays(30))
+                )
                 .assign(valueOf(StadiumResponse::createdAt).to(field(StadiumResponse::updatedAt))
                         .as((LocalDateTime c) -> c.plus(Duration.ofDays(30)))
                 )
-                .generate(field(StadiumResponse::deletedAt), gen -> gen.temporal().localDateTime().future().nullable())
+                .generate(field(StadiumResponse::deletedAt), gen -> gen.temporal().localDateTime().future()
+                        .range(LocalDateTime.now().plusDays(30), LocalDateTime.now().plusYears(3)).nullable()
+                        .nullable())
                 .toModel();
     }
 
