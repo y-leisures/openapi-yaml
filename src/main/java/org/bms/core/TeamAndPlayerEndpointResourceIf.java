@@ -26,7 +26,7 @@ import static org.bms.BmsConstants.EXAMPLE_TEAM_ID_RESPONSE;
 
 // import static jdk.internal.org.jline.reader.impl.LineReaderImpl.CompletionType.List;
 @Produces(MediaType.APPLICATION_JSON)
-public interface CoreEndpointResourceIf {
+public interface TeamAndPlayerEndpointResourceIf {
 
     // a series of player resources
     @GET

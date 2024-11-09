@@ -3,7 +3,7 @@ package org.bms.mock;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.core.Response;
-import org.bms.core.CoreEndpointResourceIf;
+import org.bms.core.TeamAndPlayerEndpointResourceIf;
 import org.bms.core.StadiumEndpointResourceIf;
 import org.bms.model.PlayerResponse;
 import org.bms.model.StadiumResponse;
@@ -19,7 +19,7 @@ import static org.bms.BmsConstants.MOCK_BMS_COMMON_APIS_FOR_AUTHENTICATED_USERS;
 @ApplicationScoped
 @Path("/dummy/api/v1/core")
 @Tag(name = MOCK_BMS_BASIC_API, description = MOCK_BMS_COMMON_APIS_FOR_AUTHENTICATED_USERS)
-public class MockEndpointResource implements CoreEndpointResourceIf, StadiumEndpointResourceIf {
+public class MockEndpointResource implements TeamAndPlayerEndpointResourceIf, StadiumEndpointResourceIf {
     @Override
     public Response getPlayers(int offset, int limit, Set<Integer> teamIds) {
         List<PlayerResponse> players = MockDataGenerator.generatePlayers(teamIds, limit);

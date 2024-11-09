@@ -10,7 +10,7 @@ import java.util.Set;
 @ApplicationScoped
 @Path("/api/v1/core")
 @BmsBasic
-public class CoreEndpointResource implements CoreEndpointResourceIf {
+public class CoreEndpointResource implements TeamAndPlayerEndpointResourceIf {
     @Override
     public Response getPlayers(int offset, int limit, Set<Integer> teamIds) {
         return null;
