@@ -7,6 +7,7 @@ import org.eclipse.microprofile.openapi.annotations.media.Schema;
 
 import java.time.LocalDateTime;
 
+@Schema(name = "GameResult", description = "The result of a baseball game")
 public record GameResult(
         @Schema(description = "The unique identifier of the game")
         Integer id,
