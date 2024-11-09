@@ -1,25 +1,30 @@
 package org.bms.mock;
 
+import net.datafaker.Faker;
 import org.bms.model.PlayerResponse;
+import org.bms.model.StadiumResponse;
 import org.bms.model.TeamResponse;
-import org.instancio.Assign;
 import org.instancio.Instancio;
 import org.instancio.Model;
 
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Locale;
 import java.util.Set;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
+import static org.instancio.Assign.valueOf;
 import static org.instancio.Select.field;
 
 public class MockDataGenerator {
 
     static List<TeamResponse> generateTeams(Integer sizeOfTeams) {
-        var predicate = Assign
-                .valueOf(field(TeamResponse::createdAt))
+        var predicate = valueOf(field(TeamResponse::createdAt))
                 .to(field(TeamResponse::updatedAt))
                 .as((LocalDateTime c) -> c.plus(Duration.ofDays(730)));
         List<TeamResponse> teamResponses = Instancio.ofList(TeamResponse.class)
@@ -32,8 +37,7 @@ public class MockDataGenerator {
     }
 
     static TeamResponse generateTeam(Integer teamId) {
-        var predicate = Assign
-                .valueOf(field(TeamResponse::createdAt))
+        var predicate = valueOf(field(TeamResponse::createdAt))
                 .to(field(TeamResponse::updatedAt))
                 .as((LocalDateTime c) -> c.plus(Duration.ofDays(365)));
         return Instancio.of(TeamResponse.class)
@@ -89,5 +93,55 @@ public class MockDataGenerator {
                             .create())
                     .collect(Collectors.toList());
         }
+    }
+
+    /*
+        Method for Stadium object
+    */
+    private static Model<StadiumResponse> provideStadiumModel() {
+        var address = new Faker(Locale.JAPAN).address();
+        Supplier<String> generateStadiumName = () -> "%s 野球場".formatted(address.city());
+        var faker = new Faker();
+        Supplier<URL> generateMapUrl = () -> {
+            var domainPrefix = "https://maps.app.goo.gl/";
+            try {
+                return new URL(domainPrefix + faker.random().hex(16));
+            } catch (MalformedURLException e) {
+                throw new RuntimeException(e);
+            }
+        };
+        Supplier<URL> generateHomepageUrl = () -> {
+            try {
+                return new URL(faker.internet().url());
+            } catch (MalformedURLException e) {
+                throw new RuntimeException(e);
+            }
+        };
+
+        // see: https://www.instancio.org/user-guide/#using-assign
+        return Instancio.of(StadiumResponse.class)
+                .supply(field(StadiumResponse::mapUrl), generateMapUrl)
+                .supply(field(StadiumResponse::homepageUrl), generateHomepageUrl)
+                .supply(field(StadiumResponse::name), generateStadiumName::get)
+                .generate(field(StadiumResponse::createdAt), gen -> gen.temporal().localDateTime().past())
+                .assign(valueOf(StadiumResponse::createdAt).to(field(StadiumResponse::updatedAt))
+                        .as((LocalDateTime c) -> c.plus(Duration.ofDays(30)))
+                )
+                .generate(field(StadiumResponse::deletedAt), gen -> gen.temporal().localDateTime().future().nullable())
+                .toModel();
+    }
+
+    static StadiumResponse generateStadium(Integer stadiumId) {
+        return Instancio
+                .of(provideStadiumModel())
+                .set(field(StadiumResponse::id), stadiumId)
+                .create();
+    }
+
+    static List<StadiumResponse> generateStadiums(Integer sizeOfStadiums) {
+        return Instancio.ofList(provideStadiumModel())
+                .size(sizeOfStadiums)
+                .generate(field(StadiumResponse::id), gen -> gen.ints().range(1, 100))
+                .create();
     }
 }

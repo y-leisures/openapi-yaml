@@ -326,6 +326,72 @@ paths:
       responses:
         "200":
           description: OK
+  /dummy/api/v1/core/stadiums:
+    get:
+      tags:
+      - Mock BMS basic API
+      parameters:
+      - name: limit
+        in: query
+        schema:
+          default: 50
+          minimum: 0
+          type: number
+      - name: offset
+        in: query
+        schema:
+          minimum: 0
+          type: number
+      responses:
+        "200":
+          description: OK
+    post:
+      tags:
+      - Mock BMS basic API
+      responses:
+        "200":
+          description: OK
+  /dummy/api/v1/core/stadiums/{id}:
+    get:
+      tags:
+      - Mock BMS basic API
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          format: int32
+          minimum: 0
+          type: integer
+      responses:
+        "200":
+          description: Stadium found
+        "404":
+          description: Stadium not found
+    put:
+      tags:
+      - Mock BMS basic API
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+    delete:
+      tags:
+      - Mock BMS basic API
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
   /dummy/api/v1/core/teams:
     get:
       tags:
