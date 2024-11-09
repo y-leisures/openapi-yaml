@@ -264,6 +264,44 @@ paths:
                   $ref: "#/components/schemas/PlayerResponse"
         "500":
           description: Internal server error
+  /dummy/api/v1/core/games:
+    get:
+      tags:
+      - Mock BMS basic API
+      parameters:
+      - name: limit
+        in: query
+        schema:
+          default: 50
+          minimum: 0
+          type: number
+      - name: offset
+        in: query
+        schema:
+          minimum: 0
+          type: number
+      responses:
+        "200":
+          description: Game is found
+        "404":
+          description: Game is not found
+  /dummy/api/v1/core/games/{id}:
+    get:
+      tags:
+      - Mock BMS basic API
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          format: int32
+          minimum: 0
+          type: integer
+      responses:
+        "200":
+          description: Game is found
+        "404":
+          description: Game is not found
   /dummy/api/v1/core/players:
     get:
       tags:

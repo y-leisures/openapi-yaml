@@ -1,6 +1,7 @@
 package org.bms.mock;
 
 import net.datafaker.Faker;
+import org.bms.model.GameResult;
 import org.bms.model.PlayerResponse;
 import org.bms.model.StadiumResponse;
 import org.bms.model.TeamResponse;
@@ -159,6 +160,47 @@ public class MockDataGenerator {
         return Instancio.ofList(provideStadiumModel())
                 .size(sizeOfStadiums)
                 .generate(field(StadiumResponse::id), gen -> gen.ints().range(1, 100))
+                .create();
+    }
+
+    /*
+        Method for GameResult object
+    */
+    private static Model<GameResult> provideGameResultModel() {
+        var team = new Faker(Locale.JAPAN).team();
+        var address = new Faker(Locale.JAPAN).address();
+        Supplier<String> generateTeamName = () -> "%s %s".formatted(
+                address.city(), team.creature()
+        );
+        Random random = new Random();
+
+        return Instancio.of(GameResult.class)
+                .generate(field(GameResult::startTime), gen -> gen.temporal().localDateTime().past()
+                        .range(LocalDateTime.now().minusYears(3), LocalDateTime.now().minusDays(30))
+                )
+                .assign(valueOf(GameResult::startTime).to(field(GameResult::endTime))
+                        .as((LocalDateTime c) -> c.plusMinutes(random.nextInt(180)))
+                )
+                .generate(field(GameResult::stadiumId), gen -> gen.ints().range(1, 15))
+                .generate(field(GameResult.Score::topTeamScore), gen -> gen.ints().range(0, 15))
+                .generate(field(GameResult.Score::bottomTeamScore), gen -> gen.ints().range(0, 12))
+                .supply(field(GameResult::topTeam), generateTeamName)
+                .supply(field(GameResult::bottomTeam), generateTeamName)
+                .toModel();
+    }
+
+    static GameResult generateBaseballGameResult(Integer gameId) {
+        var model = provideGameResultModel();
+        return Instancio.of(model)
+                .set(field(GameResult::id), gameId)
+                .create();
+    }
+
+    static List<GameResult> generateBaseballGameResults(Integer size) {
+        var model = provideGameResultModel();
+        return Instancio.ofList(model)
+                .size(size)
+                .generate(field(GameResult::id), gen -> gen.ints().range(1, 100))
                 .create();
     }
 }

@@ -114,9 +114,9 @@ public interface TeamAndPlayerEndpointResourceIf {
             ),
             @APIResponse(responseCode = "500", description = "Internal server error")
     })
-    default Response getPlayersByTeamId(@PathParam("id") Integer teamId){
+    default Response getPlayersByTeamId(@PathParam("id") Integer teamId) {
         return null;
-    };
+    }
 
     @POST
     @Path("/teams")

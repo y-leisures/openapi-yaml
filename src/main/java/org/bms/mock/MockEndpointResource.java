@@ -3,14 +3,17 @@ package org.bms.mock;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.core.Response;
-import org.bms.core.TeamAndPlayerEndpointResourceIf;
+import org.bms.core.GameResultEndpointResourceIf;
 import org.bms.core.StadiumEndpointResourceIf;
+import org.bms.core.TeamAndPlayerEndpointResourceIf;
+import org.bms.model.GameResult;
 import org.bms.model.PlayerResponse;
 import org.bms.model.StadiumResponse;
 import org.bms.model.TeamResponse;
 import org.eclipse.microprofile.openapi.annotations.tags.Tag;
 
 import java.util.List;
+import java.util.Random;
 import java.util.Set;
 
 import static org.bms.BmsConstants.MOCK_BMS_BASIC_API;
@@ -19,7 +22,7 @@ import static org.bms.BmsConstants.MOCK_BMS_COMMON_APIS_FOR_AUTHENTICATED_USERS;
 @ApplicationScoped
 @Path("/dummy/api/v1/core")
 @Tag(name = MOCK_BMS_BASIC_API, description = MOCK_BMS_COMMON_APIS_FOR_AUTHENTICATED_USERS)
-public class MockEndpointResource implements TeamAndPlayerEndpointResourceIf, StadiumEndpointResourceIf {
+public class MockEndpointResource implements TeamAndPlayerEndpointResourceIf, StadiumEndpointResourceIf, GameResultEndpointResourceIf {
     @Override
     public Response getPlayers(int offset, int limit, Set<Integer> teamIds) {
         List<PlayerResponse> players = MockDataGenerator.generatePlayers(teamIds, limit);
@@ -54,5 +57,18 @@ public class MockEndpointResource implements TeamAndPlayerEndpointResourceIf, St
     public Response getStadiumById(Integer stadiumId) {
         var stadium = MockDataGenerator.generateStadium(stadiumId);
         return Response.ok(stadium).build();
+    }
+
+    @Override
+    public Response getGameResultById(Integer gameId) {
+        GameResult result = MockDataGenerator.generateBaseballGameResult(gameId);
+        return Response.ok(result).build();
+    }
+
+    @Override
+    public Response getGameResults(int offset, int limit) {
+        int size = new Random().nextInt(limit);
+        List<GameResult> result = MockDataGenerator.generateBaseballGameResults(size);
+        return Response.ok(result).build();
     }
 }
