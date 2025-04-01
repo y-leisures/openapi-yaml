@@ -18,7 +18,7 @@
         <surefire-plugin.version>3.5.2</surefire-plugin.version>
 
         <!-- custom properties -->
-        <instancio.version>5.4.0</instancio.version>
+        <instancio.version>5.4.1</instancio.version>
         <datafaker.version>2.4.2</datafaker.version>
     </properties>
 
