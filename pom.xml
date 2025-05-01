@@ -19,7 +19,7 @@
 
         <!-- custom properties -->
         <instancio.version>5.4.1</instancio.version>
-        <datafaker.version>2.4.2</datafaker.version>
+        <datafaker.version>2.4.3</datafaker.version>
     </properties>
 
     <dependencyManagement>
