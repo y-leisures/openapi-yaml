@@ -1,0 +1,929 @@
+{
+  "openapi" : "3.1.0",
+  "components" : {
+    "schemas" : {
+      "LocalDateTime" : {
+        "type" : "string",
+        "format" : "date-time",
+        "examples" : [ "2022-03-10T12:15:50" ]
+      },
+      "PlayerResponse" : {
+        "type" : "object",
+        "properties" : {
+          "id" : {
+            "type" : "integer",
+            "format" : "int32"
+          },
+          "name" : {
+            "type" : "string"
+          },
+          "team_id" : {
+            "type" : "integer",
+            "format" : "int32"
+          },
+          "back_number" : {
+            "type" : "string"
+          },
+          "createdAt" : {
+            "$ref" : "#/components/schemas/LocalDateTime"
+          },
+          "updatedAt" : {
+            "$ref" : "#/components/schemas/LocalDateTime"
+          },
+          "deletedAt" : {
+            "$ref" : "#/components/schemas/LocalDateTime"
+          }
+        }
+      },
+      "TeamRequest" : {
+        "type" : "object",
+        "properties" : {
+          "id" : {
+            "type" : "integer",
+            "format" : "int32"
+          },
+          "name" : {
+            "type" : "string"
+          },
+          "url_path" : {
+            "type" : "string",
+            "minLength" : 4,
+            "maxLength" : 32
+          },
+          "regulationAtBats" : {
+            "type" : "number",
+            "format" : "double",
+            "maximum" : 5,
+            "minimum" : 0
+          }
+        }
+      },
+      "TeamResponse" : {
+        "description" : "The response of a team",
+        "type" : "object",
+        "required" : [ "id", "name", "regulation_at_bats" ],
+        "properties" : {
+          "id" : {
+            "type" : "integer",
+            "format" : "int32"
+          },
+          "name" : {
+            "type" : "string"
+          },
+          "url_path" : {
+            "type" : "string",
+            "maxLength" : 32
+          },
+          "regulation_at_bats" : {
+            "type" : "number",
+            "format" : "float",
+            "examples" : [ 1.5 ],
+            "maximum" : 5,
+            "exclusiveMinimum" : 0
+          },
+          "created_at" : {
+            "type" : "string",
+            "$ref" : "#/components/schemas/LocalDateTime"
+          },
+          "updated_at" : {
+            "type" : "string",
+            "$ref" : "#/components/schemas/LocalDateTime"
+          },
+          "deleted_at" : {
+            "type" : "string",
+            "$ref" : "#/components/schemas/LocalDateTime"
+          }
+        }
+      }
+    }
+  },
+  "info" : {
+    "title" : "Baseball Management System",
+    "version" : "1.0.0"
+  },
+  "tags" : [ {
+    "name" : "BMS basic API",
+    "description" : "BMS Common APIs for authenticated users"
+  }, {
+    "name" : "BMS guest API",
+    "description" : "API endpoints for guest users"
+  }, {
+    "name" : "Mock BMS basic API",
+    "description" : "Mock BMS Common APIs for authenticated users"
+  } ],
+  "servers" : [ {
+    "url" : "http://localhost:8080",
+    "description" : "Local server"
+  }, {
+    "url" : "http://192.168.0.119:8080",
+    "description" : "A remote server"
+  } ],
+  "paths" : {
+    "/api/v1/core/players" : {
+      "get" : {
+        "tags" : [ "BMS basic API" ],
+        "parameters" : [ {
+          "schema" : {
+            "type" : "number",
+            "default" : 50
+          },
+          "name" : "limit",
+          "in" : "query"
+        }, {
+          "schema" : {
+            "type" : "number"
+          },
+          "name" : "offset",
+          "in" : "query"
+        }, {
+          "description" : "filter with team ids",
+          "explode" : false,
+          "in" : "query",
+          "schema" : {
+            "type" : "array",
+            "items" : {
+              "type" : "integer",
+              "format" : "int32"
+            }
+          },
+          "style" : "form",
+          "name" : "team_ids"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK"
+          }
+        },
+        "summary" : "Get Players"
+      },
+      "post" : {
+        "tags" : [ "BMS basic API" ],
+        "responses" : {
+          "200" : {
+            "description" : "OK"
+          }
+        },
+        "summary" : "Create Player"
+      }
+    },
+    "/api/v1/core/players/{id}" : {
+      "put" : {
+        "tags" : [ "BMS basic API" ],
+        "parameters" : [ {
+          "name" : "id",
+          "in" : "path",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK"
+          }
+        },
+        "summary" : "Update Player"
+      },
+      "get" : {
+        "tags" : [ "BMS basic API" ],
+        "parameters" : [ {
+          "name" : "id",
+          "in" : "path",
+          "required" : true,
+          "schema" : {
+            "type" : "integer",
+            "format" : "int32"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK"
+          }
+        },
+        "summary" : "Get Player By Id"
+      },
+      "delete" : {
+        "tags" : [ "BMS basic API" ],
+        "parameters" : [ {
+          "name" : "id",
+          "in" : "path",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK"
+          }
+        },
+        "summary" : "Delete Player"
+      }
+    },
+    "/api/v1/core/teams" : {
+      "get" : {
+        "tags" : [ "BMS basic API" ],
+        "responses" : {
+          "200" : {
+            "description" : "A list of teams",
+            "content" : {
+              "application/json" : {
+                "example" : [ {
+                  "id" : 7935,
+                  "name" : "OLYBTSMAJN",
+                  "regulationAtBats" : 3314.7160749257064,
+                  "createdAt" : "2021-02-16T20:17:23.077965358",
+                  "updatedAt" : "2023-02-16T20:17:23.077965358",
+                  "deletedAt" : null,
+                  "url_path" : "xdlpa"
+                }, {
+                  "id" : 7550,
+                  "name" : "MHTPJMX",
+                  "regulationAtBats" : 9285.838092713186,
+                  "createdAt" : "2020-02-25T22:05:54.233017228",
+                  "updatedAt" : "2022-02-24T22:05:54.233017228",
+                  "deletedAt" : null,
+                  "url_path" : "oalzynjxvmosca"
+                }, {
+                  "id" : 1781,
+                  "name" : "HYZCGXM",
+                  "regulationAtBats" : 8751.063662102344,
+                  "createdAt" : "2017-09-14T04:09:42.712983081",
+                  "updatedAt" : "2019-09-14T04:09:42.712983081",
+                  "deletedAt" : null,
+                  "url_path" : "viql"
+                }, {
+                  "id" : 813,
+                  "name" : "MROXVVJIS",
+                  "regulationAtBats" : 2237.6594648617574,
+                  "createdAt" : "2015-08-22T01:26:03.278734206",
+                  "updatedAt" : "2017-08-21T01:26:03.278734206",
+                  "deletedAt" : null,
+                  "url_path" : "ulohy"
+                } ],
+                "schema" : {
+                  "type" : "array",
+                  "items" : {
+                    "$ref" : "#/components/schemas/TeamResponse"
+                  }
+                }
+              }
+            }
+          },
+          "500" : {
+            "description" : "Internal server error"
+          }
+        },
+        "summary" : "Get Teams"
+      },
+      "post" : {
+        "tags" : [ "BMS basic API" ],
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/TeamRequest"
+              }
+            }
+          },
+          "required" : true
+        },
+        "responses" : {
+          "200" : {
+            "description" : "OK"
+          },
+          "400" : {
+            "description" : "Bad Request"
+          }
+        },
+        "summary" : "Create Team"
+      }
+    },
+    "/api/v1/core/teams/{id}" : {
+      "put" : {
+        "tags" : [ "BMS basic API" ],
+        "parameters" : [ {
+          "name" : "id",
+          "in" : "path",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/TeamRequest"
+              }
+            }
+          },
+          "required" : true
+        },
+        "responses" : {
+          "200" : {
+            "description" : "The result of updating a team"
+          },
+          "404" : {
+            "description" : "The team does not exist"
+          },
+          "500" : {
+            "description" : "Internal server error"
+          },
+          "400" : {
+            "description" : "Bad Request"
+          }
+        },
+        "summary" : "Update Team"
+      },
+      "get" : {
+        "tags" : [ "BMS basic API" ],
+        "parameters" : [ {
+          "name" : "id",
+          "in" : "path",
+          "required" : true,
+          "schema" : {
+            "type" : "integer",
+            "format" : "int32"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "The detail of a team",
+            "content" : {
+              "application/json" : {
+                "example" : {
+                  "id" : 123,
+                  "name" : "CJRDHNYW",
+                  "regulationAtBats" : 9466.13924949258,
+                  "createdAt" : "2020-12-11T11:14:01.474910848",
+                  "updatedAt" : "2021-12-31T11:14:01.474910848",
+                  "url_path" : "gvoel"
+                },
+                "schema" : {
+                  "description" : "The response of a team",
+                  "type" : "object",
+                  "required" : [ "id", "name", "regulation_at_bats" ],
+                  "properties" : {
+                    "id" : {
+                      "type" : "integer",
+                      "format" : "int32"
+                    },
+                    "name" : {
+                      "type" : "string"
+                    },
+                    "url_path" : {
+                      "type" : "string",
+                      "maxLength" : 32
+                    },
+                    "regulation_at_bats" : {
+                      "type" : "number",
+                      "format" : "float",
+                      "examples" : [ 1.5 ],
+                      "maximum" : 5,
+                      "exclusiveMinimum" : 0
+                    },
+                    "created_at" : {
+                      "type" : "string",
+                      "$ref" : "#/components/schemas/LocalDateTime"
+                    },
+                    "updated_at" : {
+                      "type" : "string",
+                      "$ref" : "#/components/schemas/LocalDateTime"
+                    },
+                    "deleted_at" : {
+                      "type" : "string",
+                      "$ref" : "#/components/schemas/LocalDateTime"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500" : {
+            "description" : "Internal server error"
+          }
+        },
+        "summary" : "Get Team By Id"
+      },
+      "delete" : {
+        "tags" : [ "BMS basic API" ],
+        "parameters" : [ {
+          "name" : "id",
+          "in" : "path",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "The result of deleting a team",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "object",
+                  "properties" : {
+                    "message" : {
+                      "type" : "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404" : {
+            "description" : "The team does not exist"
+          },
+          "500" : {
+            "description" : "Internal server error"
+          }
+        },
+        "summary" : "Delete Team"
+      }
+    },
+    "/api/v1/core/teams/{id}/players" : {
+      "get" : {
+        "tags" : [ "BMS basic API" ],
+        "parameters" : [ {
+          "name" : "id",
+          "in" : "path",
+          "required" : true,
+          "schema" : {
+            "type" : "integer",
+            "format" : "int32"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "The detail of a team",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "array",
+                  "items" : {
+                    "$ref" : "#/components/schemas/PlayerResponse"
+                  }
+                }
+              }
+            }
+          },
+          "500" : {
+            "description" : "Internal server error"
+          }
+        },
+        "summary" : "Get Players By Team Id"
+      }
+    },
+    "/dummy/api/v1/core/players" : {
+      "get" : {
+        "tags" : [ "Mock BMS basic API" ],
+        "parameters" : [ {
+          "schema" : {
+            "type" : "number",
+            "default" : 50
+          },
+          "name" : "limit",
+          "in" : "query"
+        }, {
+          "schema" : {
+            "type" : "number"
+          },
+          "name" : "offset",
+          "in" : "query"
+        }, {
+          "description" : "filter with team ids",
+          "explode" : false,
+          "in" : "query",
+          "schema" : {
+            "type" : "array",
+            "items" : {
+              "type" : "integer",
+              "format" : "int32"
+            }
+          },
+          "style" : "form",
+          "name" : "team_ids"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK"
+          }
+        },
+        "summary" : "Get Players"
+      },
+      "post" : {
+        "tags" : [ "Mock BMS basic API" ],
+        "responses" : {
+          "200" : {
+            "description" : "OK"
+          }
+        },
+        "summary" : "Create Player"
+      }
+    },
+    "/dummy/api/v1/core/players/{id}" : {
+      "put" : {
+        "tags" : [ "Mock BMS basic API" ],
+        "parameters" : [ {
+          "name" : "id",
+          "in" : "path",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK"
+          }
+        },
+        "summary" : "Update Player"
+      },
+      "get" : {
+        "tags" : [ "Mock BMS basic API" ],
+        "parameters" : [ {
+          "name" : "id",
+          "in" : "path",
+          "required" : true,
+          "schema" : {
+            "type" : "integer",
+            "format" : "int32"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK"
+          }
+        },
+        "summary" : "Get Player By Id"
+      },
+      "delete" : {
+        "tags" : [ "Mock BMS basic API" ],
+        "parameters" : [ {
+          "name" : "id",
+          "in" : "path",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK"
+          }
+        },
+        "summary" : "Delete Player"
+      }
+    },
+    "/dummy/api/v1/core/stadiums" : {
+      "get" : {
+        "tags" : [ "Mock BMS basic API" ],
+        "parameters" : [ {
+          "schema" : {
+            "type" : "number",
+            "minimum" : 0,
+            "default" : 50
+          },
+          "name" : "limit",
+          "in" : "query"
+        }, {
+          "schema" : {
+            "type" : "number",
+            "minimum" : 0
+          },
+          "name" : "offset",
+          "in" : "query"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK"
+          }
+        },
+        "summary" : "Get Stadiums"
+      },
+      "post" : {
+        "tags" : [ "Mock BMS basic API" ],
+        "responses" : {
+          "200" : {
+            "description" : "OK"
+          }
+        },
+        "summary" : "Create Stadium"
+      }
+    },
+    "/dummy/api/v1/core/stadiums/{id}" : {
+      "put" : {
+        "tags" : [ "Mock BMS basic API" ],
+        "parameters" : [ {
+          "name" : "id",
+          "in" : "path",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK"
+          }
+        },
+        "summary" : "Update Stadium"
+      },
+      "get" : {
+        "tags" : [ "Mock BMS basic API" ],
+        "parameters" : [ {
+          "name" : "id",
+          "in" : "path",
+          "required" : true,
+          "schema" : {
+            "type" : "integer",
+            "format" : "int32",
+            "minimum" : 0
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Stadium found"
+          },
+          "404" : {
+            "description" : "Stadium not found"
+          }
+        },
+        "summary" : "Get Stadium By Id"
+      },
+      "delete" : {
+        "tags" : [ "Mock BMS basic API" ],
+        "parameters" : [ {
+          "name" : "id",
+          "in" : "path",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK"
+          }
+        },
+        "summary" : "Delete Stadium"
+      }
+    },
+    "/dummy/api/v1/core/teams" : {
+      "get" : {
+        "tags" : [ "Mock BMS basic API" ],
+        "responses" : {
+          "200" : {
+            "description" : "A list of teams",
+            "content" : {
+              "application/json" : {
+                "example" : [ {
+                  "id" : 7935,
+                  "name" : "OLYBTSMAJN",
+                  "regulationAtBats" : 3314.7160749257064,
+                  "createdAt" : "2021-02-16T20:17:23.077965358",
+                  "updatedAt" : "2023-02-16T20:17:23.077965358",
+                  "deletedAt" : null,
+                  "url_path" : "xdlpa"
+                }, {
+                  "id" : 7550,
+                  "name" : "MHTPJMX",
+                  "regulationAtBats" : 9285.838092713186,
+                  "createdAt" : "2020-02-25T22:05:54.233017228",
+                  "updatedAt" : "2022-02-24T22:05:54.233017228",
+                  "deletedAt" : null,
+                  "url_path" : "oalzynjxvmosca"
+                }, {
+                  "id" : 1781,
+                  "name" : "HYZCGXM",
+                  "regulationAtBats" : 8751.063662102344,
+                  "createdAt" : "2017-09-14T04:09:42.712983081",
+                  "updatedAt" : "2019-09-14T04:09:42.712983081",
+                  "deletedAt" : null,
+                  "url_path" : "viql"
+                }, {
+                  "id" : 813,
+                  "name" : "MROXVVJIS",
+                  "regulationAtBats" : 2237.6594648617574,
+                  "createdAt" : "2015-08-22T01:26:03.278734206",
+                  "updatedAt" : "2017-08-21T01:26:03.278734206",
+                  "deletedAt" : null,
+                  "url_path" : "ulohy"
+                } ],
+                "schema" : {
+                  "type" : "array",
+                  "items" : {
+                    "$ref" : "#/components/schemas/TeamResponse"
+                  }
+                }
+              }
+            }
+          },
+          "500" : {
+            "description" : "Internal server error"
+          }
+        },
+        "summary" : "Get Teams"
+      },
+      "post" : {
+        "tags" : [ "Mock BMS basic API" ],
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/TeamRequest"
+              }
+            }
+          },
+          "required" : true
+        },
+        "responses" : {
+          "200" : {
+            "description" : "OK"
+          },
+          "400" : {
+            "description" : "Bad Request"
+          }
+        },
+        "summary" : "Create Team"
+      }
+    },
+    "/dummy/api/v1/core/teams/{id}" : {
+      "put" : {
+        "tags" : [ "Mock BMS basic API" ],
+        "parameters" : [ {
+          "name" : "id",
+          "in" : "path",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/TeamRequest"
+              }
+            }
+          },
+          "required" : true
+        },
+        "responses" : {
+          "200" : {
+            "description" : "The result of updating a team"
+          },
+          "404" : {
+            "description" : "The team does not exist"
+          },
+          "500" : {
+            "description" : "Internal server error"
+          },
+          "400" : {
+            "description" : "Bad Request"
+          }
+        },
+        "summary" : "Update Team"
+      },
+      "get" : {
+        "tags" : [ "Mock BMS basic API" ],
+        "parameters" : [ {
+          "name" : "id",
+          "in" : "path",
+          "required" : true,
+          "schema" : {
+            "type" : "integer",
+            "format" : "int32"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "The detail of a team",
+            "content" : {
+              "application/json" : {
+                "example" : {
+                  "id" : 123,
+                  "name" : "CJRDHNYW",
+                  "regulationAtBats" : 9466.13924949258,
+                  "createdAt" : "2020-12-11T11:14:01.474910848",
+                  "updatedAt" : "2021-12-31T11:14:01.474910848",
+                  "url_path" : "gvoel"
+                },
+                "schema" : {
+                  "description" : "The response of a team",
+                  "type" : "object",
+                  "required" : [ "id", "name", "regulation_at_bats" ],
+                  "properties" : {
+                    "id" : {
+                      "type" : "integer",
+                      "format" : "int32"
+                    },
+                    "name" : {
+                      "type" : "string"
+                    },
+                    "url_path" : {
+                      "type" : "string",
+                      "maxLength" : 32
+                    },
+                    "regulation_at_bats" : {
+                      "type" : "number",
+                      "format" : "float",
+                      "examples" : [ 1.5 ],
+                      "maximum" : 5,
+                      "exclusiveMinimum" : 0
+                    },
+                    "created_at" : {
+                      "type" : "string",
+                      "$ref" : "#/components/schemas/LocalDateTime"
+                    },
+                    "updated_at" : {
+                      "type" : "string",
+                      "$ref" : "#/components/schemas/LocalDateTime"
+                    },
+                    "deleted_at" : {
+                      "type" : "string",
+                      "$ref" : "#/components/schemas/LocalDateTime"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500" : {
+            "description" : "Internal server error"
+          }
+        },
+        "summary" : "Get Team By Id"
+      },
+      "delete" : {
+        "tags" : [ "Mock BMS basic API" ],
+        "parameters" : [ {
+          "name" : "id",
+          "in" : "path",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "The result of deleting a team",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "object",
+                  "properties" : {
+                    "message" : {
+                      "type" : "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404" : {
+            "description" : "The team does not exist"
+          },
+          "500" : {
+            "description" : "Internal server error"
+          }
+        },
+        "summary" : "Delete Team"
+      }
+    },
+    "/dummy/api/v1/core/teams/{id}/players" : {
+      "get" : {
+        "tags" : [ "Mock BMS basic API" ],
+        "parameters" : [ {
+          "name" : "id",
+          "in" : "path",
+          "required" : true,
+          "schema" : {
+            "type" : "integer",
+            "format" : "int32"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "The detail of a team",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "array",
+                  "items" : {
+                    "$ref" : "#/components/schemas/PlayerResponse"
+                  }
+                }
+              }
+            }
+          },
+          "500" : {
+            "description" : "Internal server error"
+          }
+        },
+        "summary" : "Get Players By Team Id"
+      }
+    }
+  }
+}
