@@ -62,8 +62,7 @@ components:
         regulation_at_bats:
           type: number
           format: float
-          examples:
-          - 1.5
+          example: 1.5
           maximum: 5
           exclusiveMinimum: 0
         created_at:
@@ -294,8 +293,7 @@ paths:
                   regulation_at_bats:
                     type: number
                     format: float
-                    examples:
-                    - 1.5
+                    example: 1.5
                     maximum: 5
                     exclusiveMinimum: 0
                   created_at:
@@ -631,8 +629,7 @@ paths:
                   regulation_at_bats:
                     type: number
                     format: float
-                    examples:
-                    - 1.5
+                    example: 1.5
                     maximum: 5
                     exclusiveMinimum: 0
                   created_at:
