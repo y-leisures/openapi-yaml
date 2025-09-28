@@ -15,7 +15,7 @@
     <properties>
         <!-- custom properties -->
         <instancio.version>5.5.0</instancio.version>
-        <datafaker.version>2.4.2</datafaker.version>
+        <datafaker.version>2.5.1</datafaker.version>
     </properties>
 
     <dependencies>
